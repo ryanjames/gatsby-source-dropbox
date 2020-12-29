@@ -1,8 +1,6 @@
 const fetch = require(`node-fetch`)
 const path = require(`path`)
 const Dropbox = require(`dropbox`).Dropbox
-const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
-
 
 const defaultOptions = {
   path: ``,
@@ -30,8 +28,8 @@ async function listFiles(dbx, path, recursive) {
   return dbx.filesListFolder({ path, recursive })
 }
 
-async function getTemporaryUrl(dbx, path) {
-  return dbx.filesGetTemporaryLink({ path })
+async function getPublicUrl(dbx, path) {
+  return dbx.sharingCreateSharedLink({ path})
 }
 
 /**
@@ -54,56 +52,11 @@ async function getData(dbx, options) {
 }
 
 /**
- * Use filesystem to create remote file
+ * Generate Public Urls
  */
-async function processRemoteFile(
-  { dbx, datum, cache, store, createNode, touchNode, createNodeId }
-) {
-  let fileNodeID
-  const isDbxRemoteNode = Object.values(NODE_TYPES).some(entry => entry === datum.internal.type) && datum.internal.type !== NODE_TYPES.FOLDER
-  
-  if (isDbxRemoteNode) {
-    let isUpToDate
-    const remoteDataCacheKey = `dropbox-file-${datum.id}`
-    const cacheRemoteData = await cache.get(remoteDataCacheKey)
-
-    if (cacheRemoteData) {
-      isUpToDate = cacheRemoteData.contentDigest === datum.internal.contentDigest && true
-      fileNodeID = cacheRemoteData.fileNodeID
-      
-      if(isUpToDate) {
-        touchNode({ nodeId: cacheRemoteData.fileNodeID, contentDigest: datum.internal.contentDigest })
-      }
-    }
-
-    const sourceRemoteFile = !fileNodeID || !isUpToDate && true
-
-    if (sourceRemoteFile) {
-      try {
-        const url = await getTemporaryUrl(dbx, datum.dbxPath)
-        const ext = path.extname(datum.name)
-        const fileNode = await createRemoteFileNode({
-          url: url.link,
-          store,
-          cache,
-          createNode,
-          createNodeId,
-          ext,
-          name: path.basename(datum.name, ext),
-          parentNodeId: datum.id,
-        })
-        if (fileNode) {
-          fileNodeID = fileNode.id
-          await cache.set(remoteDataCacheKey, { fileNodeID, contentDigest: datum.internal.contentDigest })
-        }
-      } catch (e) {
-        console.log(`Error creating remote file`, e)
-      }
-    }
-  }
-  if (fileNodeID) {
-    datum.localFile___NODE = fileNodeID
-  }
+async function processRemoteFile( { dbx, datum }) {
+  const publicUrl = await getPublicUrl(dbx, datum.path)
+  datum.url = publicUrl.url.replace('dl=0','raw=1')
   return datum
 }
 
@@ -159,9 +112,7 @@ function createNodeData(data, options, createContentDigest) {
       id: file.id,
       parent: `__SOURCE__`,
       children: [],
-      dbxPath: file.path_display,
-      path: `root${file.path_display}`,
-      directory: path.dirname(`root${file.path_display}`),
+      path: file.path_display,
       name: file.name,
       lastModified: file.client_modified,
     }
@@ -182,7 +133,6 @@ function createNodeData(data, options, createContentDigest) {
         id: folder.id,
         parent: `__SOURCE__`,
         children: [],
-        dbxPath: folder.path_display,
         path: `root${folder.path_display}`,
         name: folder.name,
         directory: path.dirname(`root${folder.path_display}`),
@@ -257,14 +207,12 @@ exports.createSchemaCustomization = ({ actions }, pluginOptions) => {
     const { createTypes } = actions
     const typeDefs = [
       `type dropboxImage implements Node {
-        dbxPath: String,
         path: String,
         directory: String,
         name: String,
         lastModified: String,
       }`,
       `type dropboxMarkdown implements Node {
-        dbxPath: String,
         path: String,
         directory: String,
         name: String,
