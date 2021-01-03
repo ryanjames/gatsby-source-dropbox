@@ -53,7 +53,8 @@ function _listFiles() {
   _listFiles = _asyncToGenerator(function* (dbx, path, recursive) {
     return dbx.filesListFolder({
       path,
-      recursive
+      recursive,
+      limit: 2000
     });
   });
   return _listFiles.apply(this, arguments);
@@ -95,6 +96,7 @@ function _getData() {
       }
 
       const files = yield listFiles(dbx, folderId, options.recursive);
+      console.log(files);
       return files;
     } catch (e) {
       console.warn(e.error);

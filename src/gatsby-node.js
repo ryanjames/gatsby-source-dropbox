@@ -25,7 +25,7 @@ async function getFolderId(dbx, path) {
 }
 
 async function listFiles(dbx, path, recursive) {
-  return dbx.filesListFolder({ path, recursive })
+  return dbx.filesListFolder({ path, recursive, limit: 2000 })
 }
 
 async function getPublicUrl(dbx, path) {
@@ -44,6 +44,7 @@ async function getData(dbx, options) {
       folderId = folder.id
     }
     const files = await listFiles(dbx, folderId, options.recursive)
+    console.log(files)
     return files
   } catch (e) {
     console.warn(e.error)
