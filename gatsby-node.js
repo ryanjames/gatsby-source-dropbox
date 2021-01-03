@@ -120,7 +120,7 @@ function _processRemoteFile() {
     datum
   }) {
     const publicUrl = yield getPublicUrl(dbx, datum.path);
-    datum.url = publicUrl.url.replace('dl=0', 'raw=1');
+    datum.url = publicUrl.url.replace('dl=0', 'raw=1').replace("www.dropbox.com", "dl.dropboxusercontent.com");
     return datum;
   });
   return _processRemoteFile.apply(this, arguments);
