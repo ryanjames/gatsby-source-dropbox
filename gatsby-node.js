@@ -19,6 +19,7 @@ const Dropbox = require(`dropbox`).Dropbox;
 const defaultOptions = {
   path: ``,
   recursive: true,
+  limit: 2000,
   createFolderNodes: false,
   extensions: [`.jpg`, `.png`, `.md`]
 };
@@ -45,22 +46,22 @@ function _getFolderId() {
   return _getFolderId.apply(this, arguments);
 }
 
-function listFiles(_x3, _x4, _x5) {
+function listFiles(_x3, _x4, _x5, _x6) {
   return _listFiles.apply(this, arguments);
 }
 
 function _listFiles() {
-  _listFiles = _asyncToGenerator(function* (dbx, path, recursive) {
+  _listFiles = _asyncToGenerator(function* (dbx, path, recursive, limit) {
     return dbx.filesListFolder({
       path,
       recursive,
-      limit: 2000
+      limit: limit
     });
   });
   return _listFiles.apply(this, arguments);
 }
 
-function getPublicUrl(_x6, _x7) {
+function getPublicUrl(_x7, _x8) {
   return _getPublicUrl.apply(this, arguments);
 }
 /**
@@ -77,7 +78,7 @@ function _getPublicUrl() {
   return _getPublicUrl.apply(this, arguments);
 }
 
-function getData(_x8, _x9) {
+function getData(_x9, _x10) {
   return _getData.apply(this, arguments);
 }
 /**
@@ -95,7 +96,7 @@ function _getData() {
         folderId = folder.id;
       }
 
-      const files = yield listFiles(dbx, folderId, options.recursive);
+      const files = yield listFiles(dbx, folderId, options.recursive, options.limit);
       console.log(files);
       return files;
     } catch (e) {
@@ -106,7 +107,7 @@ function _getData() {
   return _getData.apply(this, arguments);
 }
 
-function processRemoteFile(_x10) {
+function processRemoteFile(_x11) {
   return _processRemoteFile.apply(this, arguments);
 }
 /**
@@ -262,13 +263,13 @@ exports.sourceNodes = /*#__PURE__*/function () {
         createNode(node);
       });
 
-      return function (_x13) {
+      return function (_x14) {
         return _ref2.apply(this, arguments);
       };
     }()));
   });
 
-  return function (_x11, _x12) {
+  return function (_x12, _x13) {
     return _ref.apply(this, arguments);
   };
 }();

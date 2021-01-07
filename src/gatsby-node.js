@@ -5,6 +5,7 @@ const Dropbox = require(`dropbox`).Dropbox
 const defaultOptions = {
   path: ``,
   recursive: true,
+  limit: 2000,
   createFolderNodes: false,
   extensions: [`.jpg`, `.png`, `.md`],
 }
@@ -24,8 +25,8 @@ async function getFolderId(dbx, path) {
   return dbx.filesGetMetadata({ path })
 }
 
-async function listFiles(dbx, path, recursive) {
-  return dbx.filesListFolder({ path, recursive, limit: 2000 })
+async function listFiles(dbx, path, recursive, limit) {
+  return dbx.filesListFolder({ path, recursive, limit: limit })
 }
 
 async function getPublicUrl(dbx, path) {
@@ -43,7 +44,7 @@ async function getData(dbx, options) {
       const folder = await getFolderId(dbx, options.path)
       folderId = folder.id
     }
-    const files = await listFiles(dbx, folderId, options.recursive)
+    const files = await listFiles(dbx, folderId, options.recursive, options.limit)
     console.log(files)
     return files
   } catch (e) {
