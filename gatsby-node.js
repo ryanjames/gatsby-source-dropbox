@@ -97,7 +97,6 @@ function _getData() {
       }
 
       const files = yield listFiles(dbx, folderId, options.recursive, options.limit);
-      console.log(files);
       return files;
     } catch (e) {
       console.warn(e.error);
@@ -122,6 +121,7 @@ function _processRemoteFile() {
   }) {
     const publicUrl = yield getPublicUrl(dbx, datum.path);
     datum.url = publicUrl.url.replace('dl=0', 'raw=1').replace("www.dropbox.com", "dl.dropboxusercontent.com");
+    console.log(datum.url);
     return datum;
   });
   return _processRemoteFile.apply(this, arguments);
