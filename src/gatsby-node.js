@@ -179,7 +179,6 @@ exports.sourceNodes = async (
   const options = { ...defaultOptions, ...pluginOptions }
   const dbx = new Dropbox({ fetch, accessToken: options.accessToken })
   const data = await getData(dbx, options)
-  /*
   const nodeData = createNodeData(data, options, createContentDigest)
 
   return Promise.all(
@@ -196,7 +195,6 @@ exports.sourceNodes = async (
       createNode(node)
     })
   )
-  */
 }
 
 /**

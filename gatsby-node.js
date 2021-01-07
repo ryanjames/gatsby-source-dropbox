@@ -247,23 +247,25 @@ exports.sourceNodes = /*#__PURE__*/function () {
       accessToken: options.accessToken
     });
     const data = yield getData(dbx, options);
-    /*
-    const nodeData = createNodeData(data, options, createContentDigest)
-     return Promise.all(
-      nodeData.map(async nodeDatum => {
-        const node = await processRemoteFile({
-          datum: nodeDatum ,
+    const nodeData = createNodeData(data, options, createContentDigest);
+    return Promise.all(nodeData.map( /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator(function* (nodeDatum) {
+        const node = yield processRemoteFile({
+          datum: nodeDatum,
           dbx,
           createNode,
           touchNode,
           store,
           cache,
-          createNodeId,
-        })
-        createNode(node)
-      })
-    )
-    */
+          createNodeId
+        });
+        createNode(node);
+      });
+
+      return function (_x14) {
+        return _ref2.apply(this, arguments);
+      };
+    }()));
   });
 
   return function (_x12, _x13) {
