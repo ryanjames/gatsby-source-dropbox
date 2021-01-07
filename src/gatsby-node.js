@@ -116,7 +116,7 @@ function createNodeData(data, options, createContentDigest) {
       name: file.name,
       lastModified: file.client_modified,
     }
-    console.log(file.name)
+    console.log("1 " + file.name)
     return {
       ...nodeDatum,
       internal: {
