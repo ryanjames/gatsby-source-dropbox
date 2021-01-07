@@ -172,7 +172,6 @@ function createNodeData(data, options, createContentDigest) {
   }
 }
 
-/*
 exports.sourceNodes = async (
   { actions: { createNode, touchNode }, store, cache, createNodeId, createContentDigest },
   pluginOptions,
@@ -180,6 +179,7 @@ exports.sourceNodes = async (
   const options = { ...defaultOptions, ...pluginOptions }
   const dbx = new Dropbox({ fetch, accessToken: options.accessToken })
   const data = await getData(dbx, options)
+  /*
   const nodeData = createNodeData(data, options, createContentDigest)
 
   return Promise.all(
@@ -193,10 +193,11 @@ exports.sourceNodes = async (
         cache,
         createNodeId,
       })
+      createNode(node)
     })
   )
+  */
 }
-*/
 
 /**
  * Schema definitions to link files to folders

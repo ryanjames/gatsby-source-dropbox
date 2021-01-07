@@ -228,32 +228,48 @@ function createNodeData(data, options, createContentDigest) {
     return fileNodes;
   }
 }
-/*
-exports.sourceNodes = async (
-  { actions: { createNode, touchNode }, store, cache, createNodeId, createContentDigest },
-  pluginOptions,
-  ) => {
-  const options = { ...defaultOptions, ...pluginOptions }
-  const dbx = new Dropbox({ fetch, accessToken: options.accessToken })
-  const data = await getData(dbx, options)
-  const nodeData = createNodeData(data, options, createContentDigest)
 
-  return Promise.all(
-    nodeData.map(async nodeDatum => {
-      const node = await processRemoteFile({
-        datum: nodeDatum ,
-        dbx,
-        createNode,
-        touchNode,
-        store,
-        cache,
-        createNodeId,
+exports.sourceNodes = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator(function* ({
+    actions: {
+      createNode,
+      touchNode
+    },
+    store,
+    cache,
+    createNodeId,
+    createContentDigest
+  }, pluginOptions) {
+    const options = _objectSpread(_objectSpread({}, defaultOptions), pluginOptions);
+
+    const dbx = new Dropbox({
+      fetch,
+      accessToken: options.accessToken
+    });
+    const data = yield getData(dbx, options);
+    /*
+    const nodeData = createNodeData(data, options, createContentDigest)
+     return Promise.all(
+      nodeData.map(async nodeDatum => {
+        const node = await processRemoteFile({
+          datum: nodeDatum ,
+          dbx,
+          createNode,
+          touchNode,
+          store,
+          cache,
+          createNodeId,
+        })
+        createNode(node)
       })
-    })
-  )
-}
-*/
+    )
+    */
+  });
 
+  return function (_x12, _x13) {
+    return _ref.apply(this, arguments);
+  };
+}();
 /**
  * Schema definitions to link files to folders
  */
