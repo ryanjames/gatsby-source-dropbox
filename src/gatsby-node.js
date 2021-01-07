@@ -58,6 +58,7 @@ async function getData(dbx, options) {
 async function processRemoteFile( { dbx, datum }) {
   const publicUrl = await getPublicUrl(dbx, datum.path)
   datum.url = publicUrl.url.replace('dl=0','raw=1').replace("www.dropbox.com","dl.dropboxusercontent.com")
+  console.log(datum.url)
   return datum
 }
 
