@@ -45,7 +45,6 @@ async function getData(dbx, options) {
       folderId = folder.id
     }
     const files = await listFiles(dbx, folderId, options.recursive, options.limit)
-    console.log(files)
     return files
   } catch (e) {
     console.warn(e.error)
