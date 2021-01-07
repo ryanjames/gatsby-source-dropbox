@@ -14,6 +14,8 @@ const fetch = require(`node-fetch`);
 
 const path = require(`path`);
 
+const PromisePool = require(`es6-promise-pool`);
+
 const Dropbox = require(`dropbox`).Dropbox;
 
 const defaultOptions = {
@@ -248,7 +250,7 @@ exports.sourceNodes = /*#__PURE__*/function () {
     });
     const data = yield getData(dbx, options);
     const nodeData = createNodeData(data, options, createContentDigest);
-    return Promise.all(nodeData.map( /*#__PURE__*/function () {
+    const promises = nodeData.map( /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator(function* (nodeDatum) {
         const node = yield processRemoteFile({
           datum: nodeDatum,
@@ -265,7 +267,10 @@ exports.sourceNodes = /*#__PURE__*/function () {
       return function (_x14) {
         return _ref2.apply(this, arguments);
       };
-    }()));
+    }());
+    const pool = new PromisePool(promises, 10);
+    yield pool.start().then(() => console.log(`Dropbox Source — Done!`));
+    return;
   });
 
   return function (_x12, _x13) {

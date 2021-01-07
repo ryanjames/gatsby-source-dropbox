@@ -1,5 +1,6 @@
 const fetch = require(`node-fetch`)
 const path = require(`path`)
+const PromisePool = require(`es6-promise-pool`)
 const Dropbox = require(`dropbox`).Dropbox
 
 const defaultOptions = {
@@ -181,8 +182,7 @@ exports.sourceNodes = async (
   const data = await getData(dbx, options)
   const nodeData = createNodeData(data, options, createContentDigest)
 
-  return Promise.all(
-    nodeData.map(async nodeDatum => {
+  const promises = nodeData.map(async nodeDatum => {
       const node = await processRemoteFile({
         datum: nodeDatum ,
         dbx,
@@ -194,7 +194,10 @@ exports.sourceNodes = async (
       })
       createNode(node)
     })
-  )
+  const pool = new PromisePool(promises, 10)
+  await pool.start().then(() => console.log(`Dropbox Source — Done!`))
+  return
+
 }
 
 /**
