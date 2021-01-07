@@ -258,8 +258,7 @@ exports.sourceNodes = /*#__PURE__*/function () {
           store,
           cache,
           createNodeId
-        });
-        createNode(node);
+        }); // createNode(node)
       });
 
       return function (_x14) {

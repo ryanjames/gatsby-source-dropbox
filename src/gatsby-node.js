@@ -192,7 +192,7 @@ exports.sourceNodes = async (
         cache,
         createNodeId,
       })
-      createNode(node)
+      // createNode(node)
     })
   )
 }
