@@ -172,6 +172,7 @@ function createNodeData(data, options, createContentDigest) {
   }
 }
 
+/*
 exports.sourceNodes = async (
   { actions: { createNode, touchNode }, store, cache, createNodeId, createContentDigest },
   pluginOptions,
@@ -192,10 +193,10 @@ exports.sourceNodes = async (
         cache,
         createNodeId,
       })
-      // createNode(node)
     })
   )
 }
+*/
 
 /**
  * Schema definitions to link files to folders
